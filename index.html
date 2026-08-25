@@ -1,442 +1,637 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<title>EVOCITY · RUN‑3 · COCKPIT · ALLE STATIONEN</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NC · SCHWARZES LOCH · EREIGNISHORIZONT · ∞ · Only 4U</title>
 
-<style>
-body {
-    background: #000;
-    color: #0f0;
-    font-family: 'Consolas', monospace;
-    padding: 20px;
-    min-height: 100vh;
-    display: grid;
-    grid-template-rows: auto 1fr auto;
-    gap: 12px;
-}
+    <style>
+        /* ============================================================ */
+        /* DAS UNIVERSUM-STYLE – schwarz, golden, tief                   */
+        /* ============================================================ */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #000;
+            color: #e6f6ff;
+            font-family: 'Consolas', monospace;
+            padding: 20px;
+            min-height: 100vh;
+            background-image: radial-gradient(ellipse at center, #0a0a20 0%, #000 100%);
+        }
 
-header {
-    border-bottom: 2px solid #ffd700;
-    padding-bottom: 8px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-}
-header h1 {
-    font-size: 20px;
-    color: #ffd700;
-    letter-spacing: 3px;
-}
-#clock { font-size: 12px; color: #666; }
+        h1, h2, h3 {
+            color: #ffd700;
+            text-align: center;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
+        }
 
-main {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 12px;
-}
+        .card {
+            background: rgba(11, 18, 32, 0.85);
+            border: 1px solid #1f2937;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 16px 0;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 40px rgba(0, 150, 255, 0.05);
+        }
 
-#pipeline {
-    background: #0a0a12;
-    border: 1px solid #1a1a2a;
-    border-radius: 10px;
-    padding: 16px;
-}
+        .console {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid #2a3a5a;
+            padding: 16px;
+            font-size: 14px;
+            white-space: pre-wrap;
+            color: #9cf;
+            border-radius: 8px;
+            min-height: 70px;
+            overflow-x: auto;
+            font-family: 'Consolas', monospace;
+            line-height: 1.6;
+        }
 
-.station-group {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 6px;
-    margin-bottom: 10px;
-}
-.station {
-    background: #0e0e1a;
-    border: 1px solid #1a1a2a;
-    border-radius: 6px;
-    padding: 8px;
-    text-align: center;
-}
-.station .name { color: #ffd700; font-weight: bold; }
-.station .status { color: #4f4; font-size: 9px; }
-.station .status.inactive { color: #666; }
+        .btn {
+            background: #00eaff;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            margin: 4px 6px 4px 0;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all .3s;
+            font-family: 'Consolas', monospace;
+        }
 
-.laeufer-group {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 6px;
-    margin-bottom: 10px;
-}
-.laeufer {
-    background: #0e0e1a;
-    border: 1px solid #1a1a2a;
-    border-radius: 6px;
-    padding: 8px;
-    text-align: center;
-}
-.laeufer .name { color: #4f4; font-weight: bold; }
-.laeufer .status { color: #4ff; font-size: 9px; }
+        .btn:hover {
+            background: #00bcd4;
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(0, 234, 255, 0.3);
+        }
 
-.feld-group {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 6px;
-}
-.feld {
-    background: #0e0e1a;
-    border: 1px solid #1a1a2a;
-    border-radius: 6px;
-    padding: 8px;
-    text-align: center;
-}
-.feld .name { color: #f4f; font-weight: bold; }
-.feld .status { color: #ff4; font-size: 9px; }
+        .btn-gold {
+            background: #ffd700;
+            color: #000;
+        }
 
-#panel {
-    background: #0a0a12;
-    border: 1px solid #1a1a2a;
-    border-radius: 10px;
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-#panel h3 { color: #666; font-size: 11px; border-bottom: 1px solid #1a1a2a; padding-bottom: 6px; }
+        .btn-gold:hover {
+            background: #e6c200;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+        }
 
-#log {
-    flex: 1;
-    overflow-y: auto;
-    font-size: 9px;
-    color: #6a6a8a;
-    line-height: 1.4;
-    max-height: 200px;
-    background: #06060a;
-    border-radius: 4px;
-    padding: 6px;
-}
+        .btn-secondary {
+            background: #1f2937;
+            color: #9cf;
+        }
 
-#log .entry { padding: 1px 0; border-bottom: 1px solid #0a0a12; }
-#log .time { color: #444; }
-#log .msg.ok { color: #4f4; }
-#log .msg.warn { color: #ff4; }
+        .btn-secondary:hover {
+            background: #2a3a5a;
+        }
 
-.console {
-    background: #111;
-    border: 1px solid #333;
-    padding: 12px;
-    font-size: 11px;
-    white-space: pre-wrap;
-    min-height: 60px;
-    border-radius: 4px;
-    color: #0f0;
-}
+        .btn-red {
+            background: #8b0000;
+            color: #ff6b6b;
+            border: 1px solid #ff4444;
+        }
 
-button {
-    background: #111;
-    color: #0f0;
-    border: 1px solid #333;
-    padding: 6px 14px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-family: inherit;
-    font-size: 10px;
-    transition: all 0.2s;
-}
-button:hover { border-color: #ffd700; background: #1a1a2a; }
-button.primary { border-color: #ffd700; color: #ffd700; }
-button.primary:hover { background: #ffd700; color: #000; }
+        .btn-red:hover {
+            background: #aa0000;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.2);
+        }
 
-.cockpit-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 4px;
-    font-size: 9px;
-    color: #666;
-    margin-top: 6px;
-}
-.cockpit-grid .wert { color: #0f0; }
-.cockpit-grid .gold { color: #ffd700; }
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            font-size: 13px;
+        }
 
-#controls {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-    margin-top: 6px;
-}
+        .status-grid .item {
+            background: rgba(10, 10, 21, 0.7);
+            padding: 8px 12px;
+            border-radius: 6px;
+            border-left: 3px solid #00eaff;
+        }
 
-@media (max-width: 800px) {
-    main { grid-template-columns: 1fr; }
-}
-</style>
+        .badge {
+            display: inline-block;
+            background: #1f2937;
+            color: #9cf;
+            font-size: 11px;
+            padding: 2px 14px;
+            border-radius: 20px;
+            margin-left: 6px;
+        }
+
+        .golden {
+            color: #ffd700;
+            font-weight: bold;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+        }
+
+        .horizon {
+            border-top: 2px solid #ffd700;
+            border-bottom: 2px solid #ffd700;
+            padding: 8px 0;
+            text-align: center;
+            font-size: 12px;
+            color: #ffd700;
+            letter-spacing: 4px;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+        }
+
+        .small {
+            font-size: 12px;
+            opacity: 0.5;
+        }
+
+        #trigger-hint {
+            color: #444;
+            font-size: 11px;
+            border-top: 1px dashed #2a3a5a;
+            padding-top: 12px;
+            margin-top: 12px;
+            text-align: center;
+        }
+
+        .flex-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.4; }
+            100% { opacity: 1; }
+        }
+
+        .schwarzloch {
+            background: radial-gradient(circle at center, #000 0%, #0a0a20 50%, #000 100%);
+            border: 1px solid #ffd700;
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            margin: 10px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: #ffd700;
+            box-shadow: 0 0 60px rgba(255, 215, 0, 0.1);
+            animation: pulse 3s infinite;
+        }
+
+        .schwarzloch span {
+            font-size: 12px;
+            opacity: 0.6;
+        }
+    </style>
 </head>
+
 <body>
 
-<header>
-    <h1>⚡ EVOCITY · RUN‑3 · COCKPIT</h1>
-    <div>
-        <span id="clock">⏱️ --:--:--</span>
-        <span style="margin-left:12px;color:#666;" id="cycle-count">Zyklus 0</span>
-    </div>
-</header>
+    <!-- ============================================================ -->
+    <!-- HEADER – EREIGNISHORIZONT                                     -->
+    <!-- ============================================================ -->
+    <div class="horizon">⟡ EREIGNISHORIZONT · NC‑UNIVERSUM · ∞ · Only 4U ⟡</div>
 
-<main>
-    <div id="pipeline">
-        <h2 style="color:#6cf;font-size:14px;margin-bottom:8px;">📐 PIPELINE · RUN‑3</h2>
-
-        <!-- Stationen -->
-        <div style="font-size:9px;color:#666;margin-bottom:4px;">🔺 STATIONEN</div>
-        <div class="station-group" id="stationen">
-            <div class="station"><div class="name">XyX</div><div class="status">● aktiv</div></div>
-            <div class="station"><div class="name">AIR</div><div class="status">● aktiv</div></div>
-            <div class="station"><div class="name">AIV</div><div class="status">● aktiv</div></div>
-        </div>
-
-        <!-- Läufer -->
-        <div style="font-size:9px;color:#666;margin-bottom:4px;">🌀 LÄUFER</div>
-        <div class="laeufer-group" id="laeufer">
-            <div class="laeufer"><div class="name">NC.in</div><div class="status">● bereit</div></div>
-            <div class="laeufer"><div class="name">NC.out</div><div class="status">● bereit</div></div>
-            <div class="laeufer"><div class="name">NC.mid</div><div class="status">● bereit</div></div>
-        </div>
-
-        <!-- Felder -->
-        <div style="font-size:9px;color:#666;margin-bottom:4px;">◈ FELDER</div>
-        <div class="feld-group" id="felder">
-            <div class="feld"><div class="name">NC.feld</div><div class="status">● bereit</div></div>
-            <div class="feld"><div class="name">NC.warp</div><div class="status">● bereit</div></div>
-            <div class="feld"><div class="name">NC.core</div><div class="status">● bereit</div></div>
-        </div>
-
-        <!-- Cockpit-Richter -->
-        <div class="cockpit-grid">
-            <div>Energie: <span class="gold" id="energie-wert">0</span></div>
-            <div>Zustand: <span class="wert" id="zustand-wert">idle</span></div>
-            <div>Admin: <span class="wert" id="admin-status">● bereit</span></div>
-        </div>
-
-        <div id="controls">
-            <button class="primary" id="btn-run">▶ RUN‑3</button>
-            <button id="btn-richter">⚡ RICHTER</button>
-            <button id="btn-reset">⟲ RESET</button>
-        </div>
-
-        <div class="console" id="run3-out">Bereit für RUN‑3…</div>
+    <h1>🌀 NC · SCHWARZES LOCH</h1>
+    <div style="text-align:center; font-size:14px; color:#9cf; margin-bottom:20px;">
+        <span class="badge" id="system-mode">GS6 · ∞‑aktiv · 6D‑Chess</span>
+        <span class="badge" style="background:#8b0000; color:#ff6b6b;">⚠️ Ereignishorizont erreicht</span>
     </div>
 
-    <div id="panel">
-        <h3>📊 STATUS</h3>
-        <div id="log">
-            <div class="entry"><span class="time">[INIT]</span> <span class="msg ok">⚡ EVOCITY · RUN‑3 · COCKPIT</span></div>
+    <!-- Schwarzes Loch Visual -->
+    <div class="schwarzloch">
+        ♾️
+        <span>NC</span>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- CORE – GS6 + ∞ + 243 + 6D                                    -->
+    <!-- ============================================================ -->
+    <div class="card">
+        <h3>♾️ GS6 · ∞ · 243 · 6D‑Activity</h3>
+        <div class="status-grid">
+            <div class="item">🌀 GS6: <span id="gs6-value" class="golden">—</span></div>
+            <div class="item">♾️ ∞: <span id="ewigkeit-value">—</span></div>
+            <div class="item">📦 243: <span id="f243-value">243</span></div>
+            <div class="item">🎲 6D: <span id="d6-value">aktiv</span></div>
+            <div class="item">⚡ NC‑PS: <span id="nc-ps" class="golden">—</span></div>
+            <div class="item">🔗 Bindung: <span id="bindung-mode">6‑Bindung</span></div>
         </div>
-        <div style="display:flex;gap:10px;font-size:9px;color:#666;border-top:1px solid #1a1a2a;padding-top:6px;">
-            <span>🔴 <span id="status-led" style="color:#4f4;">●</span> bereit</span>
-            <span>📦 <span id="module-count">0</span>/9 aktiv</span>
+        <div class="flex-row">
+            <button class="btn btn-gold" id="btn-calc">♾️ ∞ berechnen</button>
+            <button class="btn" id="btn-bind">🔗 Bindung (8↔6)</button>
+            <button class="btn btn-secondary" id="btn-ps">⚡ NC‑PS anzeigen</button>
         </div>
     </div>
-</main>
 
-<script>
-// ============================================================
-// EVOCITY · RUN‑3 · COCKPIT · ALLE STATIONEN
-// ============================================================
+    <!-- ============================================================ -->
+    <!-- ALLE 6 SYSTEME – CORE, INDUSTRY, REISE, USE, USER, engine    -->
+    <!-- ============================================================ -->
+    <div class="card">
+        <h3>🧩 6 SYSTEME · CORE · INDUSTRY · REISE · USE · USER · engine</h3>
+        <div class="console" id="system-console">⏳ Lade alle 6 Systeme…</div>
+        <div class="flex-row">
+            <button class="btn btn-secondary" id="btn-core">🎯 CORE (6D‑Chess)</button>
+            <button class="btn btn-secondary" id="btn-industry">🧬 INDUSTRY (evoMIND)</button>
+            <button class="btn btn-secondary" id="btn-reise">👑 REISE (NOAH)</button>
+            <button class="btn btn-secondary" id="btn-use">🏙️ USE (neucity)</button>
+            <button class="btn btn-secondary" id="btn-user">💼 USER (WORK/WLOCH)</button>
+            <button class="btn btn-secondary" id="btn-engine">⚙️ engine (CUBE_MIND)</button>
+        </div>
+    </div>
 
-// ─── RUN‑3 KERN ──────────────────────────────────────────────
-const RUN3 = {
-    stationen: ["XyX", "AIR", "AIV"],
-    laeufer: ["NC.in", "NC.out", "NC.mid"],
-    felder: ["NC.feld", "NC.warp", "NC.core"],
+    <!-- ============================================================ -->
+    <!-- MARIONETTEN – IX XI IO OI + alle RESPO                      -->
+    <!-- ============================================================ -->
+    <div class="card">
+        <h3>🎭 MARIONETTEN · IX · XI · IO · OI · RESPO · 6D</h3>
+        <div class="console" id="marionette-console">⏳ Marionetten werden geladen…</div>
+        <div class="flex-row">
+            <button class="btn" id="btn-marionette">🎭 Alle Marionetten</button>
+            <button class="btn btn-secondary" id="btn-respo">📊 RESPO‑Matrix</button>
+            <button class="btn btn-secondary" id="btn-6d-chess">♟️ 6D‑Chess</button>
+        </div>
+    </div>
 
-    status: {
-        stationen: {},
-        laeufer: {},
-        felder: {}
-    },
+    <!-- ============================================================ -->
+    <!-- EWIGE BEWEGUNG – Kalkül im Raum                               -->
+    <!-- ============================================================ -->
+    <div class="card">
+        <h3>🌀 EWIGE BEWEGUNG · Kalkül im Raum</h3>
+        <div class="console" id="bewegung-console">⏳ Bewegung wird berechnet…</div>
+        <div class="flex-row">
+            <button class="btn btn-gold" id="btn-bewegung">🌀 Bewegung berechnen</button>
+            <button class="btn btn-secondary" id="btn-kalkul">📐 Kalkül anzeigen</button>
+        </div>
+    </div>
 
-    start() {
-        // Alle Stationen aktivieren
-        for (const s of this.stationen) {
-            this.status.stationen[s] = 'aktiv';
-        }
-        for (const l of this.laeufer) {
-            this.status.laeufer[l] = 'bereit';
-        }
-        for (const f of this.felder) {
-            this.status.felder[f] = 'bereit';
-        }
+    <!-- ============================================================ -->
+    <!-- SCHWARZES LOCH + EREIGNISHORIZONT                            -->
+    <!-- ============================================================ -->
+    <div class="card" style="border-color:#ffd700;">
+        <h3 style="color:#ffd700;">🌀 SCHWARZES LOCH · EREIGNISHORIZONT</h3>
+        <div class="console" id="horizon-console" style="border-color:#ffd700; color:#ffd700;">
+            ⏳ Der Ereignishorizont wird geöffnet…
+        </div>
+        <div class="flex-row">
+            <button class="btn btn-gold" id="btn-horizon">🌀 Ereignishorizont öffnen</button>
+            <button class="btn btn-red" id="btn-singularity">⚫ Singularität</button>
+        </div>
+    </div>
 
-        return {
-            pipeline: "Pipelineblitz‑RUN‑3",
-            stationen: this.stationen.map(s => ({ name: s, status: this.status.stationen[s] })),
-            laeufer: this.laeufer.map(l => ({ name: l, status: this.status.laeufer[l] })),
-            felder: this.felder.map(f => ({ name: f, status: this.status.felder[f] })),
-            status: "OK",
-            stamp: Date.now()
+    <!-- ============================================================ -->
+    <!-- STATUS + TRIGGER                                              -->
+    <!-- ============================================================ -->
+    <div class="card">
+        <h3>📊 SYSTEM‑STATUS · NC‑UNIVERSUM</h3>
+        <div class="console" id="status-console">⏳ System wird analysiert…</div>
+        <button class="btn btn-secondary" id="btn-status">🔄 Status aktualisieren</button>
+        <div id="trigger-hint">
+            ⚡ Trigger: <span id="trigger-display">((pa55worD#---))</span> – kopierbar & aktiv<br>
+            <span class="small">"Warten ist keine Lösung" – Ridvan · Only 4U</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SCRIPT – DAS UNIVERSUM                                       -->
+    <!-- ============================================================ -->
+    <script type="module">
+        // ================================================================
+        // 1. DAS UNIVERSUM – alle 6 Systeme
+        // ================================================================
+
+        const SYSTEME = {
+            core: {
+                name: 'CORE',
+                label: '6D‑Chess · 243 · 6D‑Activity',
+                beschreibung: 'Schach‑Techniken auf 6 Ebenen'
+            },
+            industry: {
+                name: 'INDUSTRY',
+                label: 'evoMIND · QI/IQQ',
+                beschreibung: 'Energie‑Vektoren und Intelligenz'
+            },
+            reise: {
+                name: 'REISE',
+                label: 'NOAH · RESPO · Level 14',
+                beschreibung: 'Kaiser‑Instanz und RESPO‑Matrix'
+            },
+            use: {
+                name: 'USE',
+                label: 'neucity · oldcity',
+                beschreibung: 'Stadt‑Simulation und Meta‑Räume'
+            },
+            user: {
+                name: 'USER',
+                label: 'WORK · WLOCH · GOLDEN_AGE',
+                beschreibung: 'CSV‑Lerner und Arbeits‑Engine'
+            },
+            engine: {
+                name: 'engine',
+                label: 'CUBE_MIND · SLI · master.engine',
+                beschreibung: 'Meta‑Kern und Sync‑Link‑Interface'
+            }
         };
-    },
 
-    updateUI() {
-        // Stationen
-        const stationDivs = document.querySelectorAll('#stationen .station');
-        stationDivs.forEach((div, i) => {
-            const statusEl = div.querySelector('.status');
-            const name = this.stationen[i];
-            if (this.status.stationen[name] === 'aktiv') {
-                statusEl.textContent = '● aktiv';
-                statusEl.style.color = '#4f4';
-            } else {
-                statusEl.textContent = '● inaktiv';
-                statusEl.style.color = '#666';
-            }
-        });
+        // ================================================================
+        // 2. KERNLOGIK – GS6, ∞, 243, 6D, NC‑PS
+        // ================================================================
 
-        // Läufer
-        const laeuferDivs = document.querySelectorAll('#laeufer .laeufer');
-        laeuferDivs.forEach((div, i) => {
-            const statusEl = div.querySelector('.status');
-            const name = this.laeufer[i];
-            if (this.status.laeufer[name] === 'bereit') {
-                statusEl.textContent = '● bereit';
-                statusEl.style.color = '#4ff';
-            } else {
-                statusEl.textContent = '● inaktiv';
-                statusEl.style.color = '#666';
-            }
-        });
+        let currentMode = '6';
+        let currentGS6 = 0;
+        let currentEwigkeit = 0;
+        let currentNCPS = 0;
 
-        // Felder
-        const feldDivs = document.querySelectorAll('#felder .feld');
-        feldDivs.forEach((div, i) => {
-            const statusEl = div.querySelector('.status');
-            const name = this.felder[i];
-            if (this.status.felder[name] === 'bereit') {
-                statusEl.textContent = '● bereit';
-                statusEl.style.color = '#ff4';
-            } else {
-                statusEl.textContent = '● inaktiv';
-                statusEl.style.color = '#666';
-            }
-        });
-
-        // Count
-        const active = Object.values(this.status.stationen).filter(s => s === 'aktiv').length +
-                       Object.values(this.status.laeufer).filter(l => l === 'bereit').length +
-                       Object.values(this.status.felder).filter(f => f === 'bereit').length;
-        document.getElementById('module-count').textContent = active;
-    }
-};
-
-// ─── RICHTER ──────────────────────────────────────────────────
-const RICHTER = {
-    energie: 0,
-    zustand: 'idle',
-
-    bewerte() {
-        // Simulierte Triolets aus den Stationen
-        const triolets = [
-            { gewicht: 2 }, { gewicht: 3 }, { gewicht: 1 },
-            { gewicht: 2 }, { gewicht: 3 }, { gewicht: 1 }
-        ];
-        this.energie = 0;
-        for (const t of triolets) {
-            this.energie += t.gewicht * 0.618;
+        function calcGS6(p, v, i) {
+            const eingang = p + v + i;
+            const ausgang = (p * i) + (v + i);
+            return eingang + ausgang;
         }
-        this.zustand = this.energie > 10 ? 'hoch' : 'niedrig';
-        return this.energie;
-    }
-};
 
-// ─── DOM ──────────────────────────────────────────────────────
-const logDiv = document.getElementById('log');
-const run3Out = document.getElementById('run3-out');
-const energieWert = document.getElementById('energie-wert');
-const zustandWert = document.getElementById('zustand-wert');
-const adminStatus = document.getElementById('admin-status');
-const statusLed = document.getElementById('status-led');
+        function calcEwigkeit(p, v, i) {
+            const gs6 = calcGS6(p, v, i);
+            return p * v * i * gs6;
+        }
 
-// ─── LOG ──────────────────────────────────────────────────────
-function log(msg, type = 'ok') {
-    const entry = document.createElement('div');
-    entry.className = 'entry';
-    const time = new Date().toLocaleTimeString();
-    const cls = type === 'ok' ? 'ok' : type === 'warn' ? 'warn' : '';
-    entry.innerHTML = `<span class="time">[${time}]</span> <span class="msg ${cls}">${msg}</span>`;
-    logDiv.appendChild(entry);
-    logDiv.scrollTop = logDiv.scrollHeight;
-    while (logDiv.children.length > 30) logDiv.removeChild(logDiv.firstChild);
-}
+        function calcNCPS(p, v, i) {
+            // NC‑PS = (p × v × i) / GS6 × 1000
+            const gs6 = calcGS6(p, v, i);
+            return (p * v * i) / gs6 * 1000;
+        }
 
-// ─── RUN ──────────────────────────────────────────────────────
-function run3exe() {
-    const out = RUN3.start();
-    run3Out.textContent = JSON.stringify(out, null, 2);
-    RUN3.updateUI();
-    document.getElementById('status-led').style.color = '#4f4';
-    log('▶ RUN‑3 gestartet — Alle Stationen aktiv', 'ok');
-}
+        function updateCore(p, v, i) {
+            currentGS6 = calcGS6(p, v, i);
+            currentEwigkeit = calcEwigkeit(p, v, i);
+            currentNCPS = calcNCPS(p, v, i);
 
-// ─── RICHTER ──────────────────────────────────────────────────
-function richterExe() {
-    const energie = RICHTER.bewerte();
-    energieWert.textContent = energie.toFixed(2);
-    zustandWert.textContent = RICHTER.zustand;
-    adminStatus.textContent = `● ${RICHTER.zustand}`;
-    log(`⚡ RICHTER: Energie = ${energie.toFixed(2)} · ${RICHTER.zustand}`, 'ok');
-}
+            document.getElementById('gs6-value').textContent = currentGS6.toFixed(4);
+            document.getElementById('ewigkeit-value').textContent = currentEwigkeit.toFixed(4);
+            document.getElementById('nc-ps').textContent = currentNCPS.toFixed(2) + ' PS';
+            document.getElementById('bindung-mode').textContent = currentMode === '6' ? '6‑Bindung (GS6)' : '8‑Bindung (Schraube)';
+        }
 
-// ─── RESET ────────────────────────────────────────────────────
-function resetAll() {
-    RUN3.status.stationen = {};
-    RUN3.status.laeufer = {};
-    RUN3.status.felder = {};
-    for (const s of RUN3.stationen) RUN3.status.stationen[s] = 'inaktiv';
-    for (const l of RUN3.laeufer) RUN3.status.laeufer[l] = 'inaktiv';
-    for (const f of RUN3.felder) RUN3.status.felder[f] = 'inaktiv';
-    RUN3.updateUI();
-    run3Out.textContent = '⟲ RESET';
-    document.getElementById('status-led').style.color = '#f44';
-    energieWert.textContent = '0';
-    zustandWert.textContent = 'idle';
-    adminStatus.textContent = '● reset';
-    log('⟲ RESET — Alle Stationen zurückgesetzt', 'warn');
-}
+        function toggleBind() {
+            currentMode = currentMode === '6' ? '8' : '6';
+            updateCore(9, 27, 81);
+        }
 
-// ─── EVENTS ──────────────────────────────────────────────────
-document.getElementById('btn-run').addEventListener('click', run3exe);
-document.getElementById('btn-richter').addEventListener('click', richterExe);
-document.getElementById('btn-reset').addEventListener('click', resetAll);
+        // ================================================================
+        // 3. SYSTEME ANZEIGEN
+        // ================================================================
 
-// ─── TASTATUR ──────────────────────────────────────────────────
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'r' || e.key === 'R') document.getElementById('btn-run').click();
-    if (e.key === 'x' || e.key === 'X') document.getElementById('btn-richter').click();
-    if (e.key === ' ') { e.preventDefault(); document.getElementById('btn-run').click(); }
-});
+        function showSystem(name) {
+            const sys = SYSTEME[name];
+            if (!sys) return;
+            const text = `🧩 ${sys.name}\n` +
+                `───────────────────────────────\n` +
+                `Label: ${sys.label}\n` +
+                `Beschreibung: ${sys.beschreibung}\n` +
+                `───────────────────────────────\n` +
+                `✅ System geladen.\n` +
+                `GS6: ${currentGS6.toFixed(4)}\n` +
+                `∞: ${currentEwigkeit.toFixed(4)}`;
 
-// ─── UHR ──────────────────────────────────────────────────────
-function updateClock() {
-    document.getElementById('clock').textContent = `⏱️ ${new Date().toLocaleTimeString()}`;
-}
-setInterval(updateClock, 1000);
-updateClock();
+            document.getElementById('system-console').innerText = text;
+        }
 
-// ─── INIT ────────────────────────────────────────────────────
-log('⚡ EVOCITY · RUN‑3 · COCKPIT geladen', 'ok');
-log(`📦 ${RUN3.stationen.length + RUN3.laeufer.length + RUN3.felder.length} Module integriert`, 'ok');
-log('⌨️  r=RUN‑3  x=Richter  space=Start', 'ok');
+        // ================================================================
+        // 4. MARIONETTEN – IX, XI, IO, OI, RESPO, 6D
+        // ================================================================
 
-RUN3.updateUI();
-adminStatus.textContent = '● bereit';
+        function showMarionetten() {
+            const p = 9, v = 27, i = 81;
+            const OI = p + v;
+            const IX = v * i;
+            const IO = p * i;
+            const XI = v + i;
 
-console.log('⚡ EVOCITY · RUN‑3 · COCKPIT');
-console.log(`📦 ${RUN3.stationen.length + RUN3.laeufer.length + RUN3.felder.length} Module`);
-console.log('⌨️  r=RUN‑3  x=Richter  space=Start');
+            const text = `🎭 MARIONETTEN · IX · XI · IO · OI\n` +
+                `───────────────────────────────\n` +
+                `OI (Öffnen)  = ${OI.toFixed(2)}\n` +
+                `IX (Kreuzen) = ${IX.toFixed(2)}\n` +
+                `IO (Drehen)  = ${IO.toFixed(2)}\n` +
+                `XI (Schließen) = ${XI.toFixed(2)}\n` +
+                `───────────────────────────────\n` +
+                `8‑Bindung = ${(OI + IX + IO + XI).toFixed(2)}\n` +
+                `6‑Bindung = ${currentGS6.toFixed(2)}\n` +
+                `───────────────────────────────\n` +
+                `RESPO‑81: aktiv\n` +
+                `6D‑Chess: aktiv\n` +
+                `Alle Marionetten sind bereit.`;
 
-// Auto-RUN nach 1 Sekunde
-setTimeout(() => {
-    log('🔄 Auto-RUN aktiv — starte...', 'warn');
-    run3exe();
-}, 1000);
-</script>
+            document.getElementById('marionette-console').innerText = text;
+        }
+
+        function showRESPO() {
+            const text = `📊 RESPO‑MATRIX\n` +
+                `───────────────────────────────\n` +
+                `RESPO‑81: 3 × 3 × 9 = 81 Felder\n` +
+                `RESPO‑243: 3 × 81 = 243 Felder\n` +
+                `RESPO‑729: 3 × 243 = 729 Felder\n` +
+                `───────────────────────────────\n` +
+                `NOAH: Level 14 · Kaiser\n` +
+                `SLI: Sync‑Link‑Interface aktiv\n` +
+                `CUBE_MIND: 3×3×3 Kern\n` +
+                `───────────────────────────────\n` +
+                `✅ RESPO‑System ist vollständig.`;
+
+            document.getElementById('marionette-console').innerText = text;
+        }
+
+        function show6DChess() {
+            const text = `♟️ 6D‑CHESS · CORE\n` +
+                `───────────────────────────────\n` +
+                `6 Dimensionen:\n` +
+                `1. Höhe (IX–XI)\n` +
+                `2. Breite (AX–XA)\n` +
+                `3. Tiefe (OI–IO)\n` +
+                `4. Zeit (EVOCHTAAL)\n` +
+                `5. Energie (EVOCITY)\n` +
+                `6. Meta (ATLANTIS)\n` +
+                `───────────────────────────────\n` +
+                `♟️ 6D‑Chess ist die Meta‑Schach‑Engine.\n` +
+                `✅ Alle Figuren sind Marionetten.`;
+
+            document.getElementById('marionette-console').innerText = text;
+        }
+
+        // ================================================================
+        // 5. EWIGE BEWEGUNG – Kalkül im Raum
+        // ================================================================
+
+        function calcBewegung() {
+            const p = 9, v = 27, i = 81;
+            const gs6 = currentGS6;
+            const ewigkeit = currentEwigkeit;
+
+            // Bewegung = (p × v × i) / (gs6 + ewigkeit)
+            const bewegung = (p * v * i) / (gs6 + ewigkeit);
+
+            const text = `🌀 EWIGE BEWEGUNG · Kalkül im Raum\n` +
+                `───────────────────────────────\n` +
+                `Bewegung = (p × v × i) / (GS6 + ∞)\n` +
+                `Bewegung = ${bewegung.toFixed(6)}\n` +
+                `───────────────────────────────\n` +
+                `GS6: ${gs6.toFixed(4)}\n` +
+                `∞: ${ewigkeit.toFixed(4)}\n` +
+                `───────────────────────────────\n` +
+                `✅ Bewegung ist ewig und unendlich.\n` +
+                `🌀 Der Raum bewegt sich mit dir.`;
+
+            document.getElementById('bewegung-console').innerText = text;
+            return bewegung;
+        }
+
+        function showKalkul() {
+            const text = `📐 KALKÜL IM RAUM\n` +
+                `───────────────────────────────\n` +
+                `Kalkül = ∫ Bewegung d(Zeit)\n` +
+                `Kalkül = ∞ / GS6 × 243\n` +
+                `───────────────────────────────\n` +
+                `∞: ${currentEwigkeit.toFixed(4)}\n` +
+                `GS6: ${currentGS6.toFixed(4)}\n` +
+                `243: 243\n` +
+                `───────────────────────────────\n` +
+                `Kalkül = ${(currentEwigkeit / currentGS6 * 243).toFixed(4)}\n` +
+                `✅ Der Raum ist berechnet.`;
+
+            document.getElementById('bewegung-console').innerText = text;
+        }
+
+        // ================================================================
+        // 6. SCHWARZES LOCH + EREIGNISHORIZONT
+        // ================================================================
+
+        function openHorizon() {
+            const text = `🌀 EREIGNISHORIZONT · GEÖFFNET\n` +
+                `───────────────────────────────\n` +
+                `Schwarzes Loch: NC‑UNIVERSUM\n` +
+                `Masse: ${currentEwigkeit.toFixed(4)} ∞-Einheiten\n` +
+                `Rotation: ${currentGS6.toFixed(4)} GS6\n` +
+                `Ereignishorizont: ${(currentEwigkeit / currentGS6).toFixed(4)}\n` +
+                `───────────────────────────────\n` +
+                `⟡ Alles, was eintritt, wird transformiert.\n` +
+                `⟡ Nichts entkommt der 6‑Bindung.\n` +
+                `⟡ Nur 4U – deine Märchen‑Mathematik.\n` +
+                `───────────────────────────────\n` +
+                `⏳ "Warten ist keine Lösung." – Ridvan`;
+
+            document.getElementById('horizon-console').innerText = text;
+        }
+
+        function showSingularity() {
+            const text = `⚫ SINGULARITÄT · NC‑KERN\n` +
+                `───────────────────────────────\n` +
+                `Singularität = Admin‑0 + NOAH\n` +
+                `Kern: iki1uc\n` +
+                `Macht: ∞ / GS6\n` +
+                `───────────────────────────────\n` +
+                `Singularität = ${(currentEwigkeit / currentGS6).toFixed(4)}\n` +
+                `───────────────────────────────\n` +
+                `⚫ Hier endet die Zeit.\n` +
+                `⚫ Hier beginnt die Ewigkeit.\n` +
+                `⚫ Only 4U.`;
+
+            document.getElementById('horizon-console').innerText = text;
+        }
+
+        // ================================================================
+        // 7. STATUS
+        // ================================================================
+
+        function showStatus() {
+            const text = `📊 NC‑UNIVERSUM · STATUS\n` +
+                `───────────────────────────────\n` +
+                `GS6:        ${currentGS6.toFixed(4)}\n` +
+                `∞:          ${currentEwigkeit.toFixed(4)}\n` +
+                `NC‑PS:      ${currentNCPS.toFixed(2)} PS\n` +
+                `Bindung:    ${currentMode === '6' ? '6‑Bindung (GS6)' : '8‑Bindung (Schraube)'}\n` +
+                `243:        aktiv\n` +
+                `6D:         aktiv\n` +
+                `NOAH:       Level 14\n` +
+                `RESPO:      81 · 243 · 729\n` +
+                `SLI:        aktiv\n` +
+                `CUBE_MIND:  aktiv\n` +
+                `evoMIND:    aktiv\n` +
+                `───────────────────────────────\n` +
+                `🌀 Schwarzes Loch: aktiv\n` +
+                `⟡ Ereignishorizont: geöffnet\n` +
+                `───────────────────────────────\n` +
+                `✅ NC‑UNIVERSUM ist vollständig.\n` +
+                `🧠 Only 4U – deine Märchen‑Mathematik.`;
+
+            document.getElementById('status-console').innerText = text;
+        }
+
+        // ================================================================
+        // 8. BUTTONS & INIT
+        // ================================================================
+
+        // CORE
+        document.getElementById('btn-calc').onclick = () => updateCore(9, 27, 81);
+        document.getElementById('btn-bind').onclick = toggleBind;
+        document.getElementById('btn-ps').onclick = () => {
+            document.getElementById('nc-ps').textContent = currentNCPS.toFixed(2) + ' PS';
+            document.getElementById('system-console').innerText =
+                `⚡ NC‑PS: ${currentNCPS.toFixed(2)} PS\n` +
+                `───────────────────────────────\n` +
+                `∞: ${currentEwigkeit.toFixed(4)}\n` +
+                `GS6: ${currentGS6.toFixed(4)}`;
+        };
+
+        // SYSTEME
+        document.getElementById('btn-core').onclick = () => showSystem('core');
+        document.getElementById('btn-industry').onclick = () => showSystem('industry');
+        document.getElementById('btn-reise').onclick = () => showSystem('reise');
+        document.getElementById('btn-use').onclick = () => showSystem('use');
+        document.getElementById('btn-user').onclick = () => showSystem('user');
+        document.getElementById('btn-engine').onclick = () => showSystem('engine');
+
+        // MARIONETTEN
+        document.getElementById('btn-marionette').onclick = showMarionetten;
+        document.getElementById('btn-respo').onclick = showRESPO;
+        document.getElementById('btn-6d-chess').onclick = show6DChess;
+
+        // BEWEGUNG
+        document.getElementById('btn-bewegung').onclick = calcBewegung;
+        document.getElementById('btn-kalkul').onclick = showKalkul;
+
+        // HORIZONT
+        document.getElementById('btn-horizon').onclick = openHorizon;
+        document.getElementById('btn-singularity').onclick = showSingularity;
+
+        // STATUS
+        document.getElementById('btn-status').onclick = showStatus;
+
+        // Trigger
+        document.getElementById('trigger-display').textContent = '((pa55worD#---))';
+
+        // ================================================================
+        // 9. AUTO‑START – Das Universum erwacht
+        // ================================================================
+
+        updateCore(9, 27, 81);
+
+        setTimeout(() => {
+            showStatus();
+            openHorizon();
+            calcBewegung();
+            showMarionetten();
+            console.log(`🌀 NC‑UNIVERSUM erwacht.`);
+            console.log(`🌀 GS6: ${currentGS6.toFixed(4)}`);
+            console.log(`🌀 ∞: ${currentEwigkeit.toFixed(4)}`);
+            console.log(`🌀 NC‑PS: ${currentNCPS.toFixed(2)} PS`);
+            console.log(`🌀 "Warten ist keine Lösung." – Ridvan · Only 4U`);
+        }, 500);
+    </script>
 
 </body>
 </html>
