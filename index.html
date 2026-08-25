@@ -2,63 +2,51 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>evoMIND</title>
+<title>RUN‑3 · Pipelineblitz · iki1uc</title>
 
 <style>
-    body {
-        font-family: monospace;
-        background: #f5f5f5;
-        color: #222;
-        padding: 40px;
-        text-align: center;
-    }
-    suite {
-        display: block;
-        font-size: 32px;
-        margin-bottom: 20px;
-        font-weight: bold;
-    }
-    slide {
-        display: block;
-        font-size: 18px;
-        margin-bottom: 20px;
-        opacity: 0.7;
-    }
-    .puzzle {
-        font-size: 26px;
-        padding: 20px;
-        border: 2px dashed #444;
-        display: inline-block;
-        margin-top: 20px;
-    }
+  body { background:#000; color:#0f0; font-family:Consolas; padding:20px; }
+  h1 { color:#6cf; }
+  .console { background:#111; border:1px solid #333; padding:10px; }
 </style>
 </head>
 
 <body>
 
-<suite>evoMIND</suite>
-<slide>dimension.flow()</slide>
+<h1>RUN‑3 · Pipelineblitz · EXE‑Start</h1>
 
-<div class="puzzle" data-piece="evoMIND">
-    ((( evoMIND dimension.flow() )))
-</div>
+<div id="run3" class="console">RUN‑3 wird geladen…</div>
 
 <script>
-// Sichtbares Startsignal
-console.log("evoMIND geladen");
+// ======================================================
+// RUN‑3 · Pipelineblitz · EXE‑Startpunkt
+// ======================================================
 
-// Engine‑Start (dein System)
-if (window.CUBE_MIND && window.MATRIX9x9) {
-    const start = window.CUBE_MIND.start();
-    console.log("CUBE_MIND:", start);
+const RUN3 = {
 
-    // Sichtbare Ausgabe
-    const out = document.createElement("pre");
-    out.textContent = JSON.stringify(start, null, 2);
-    document.body.appendChild(out);
-} else {
-    console.warn("Engine nicht geladen");
-}
+  stationen: ["XyX", "AIR", "AIV"],
+  laeufer: ["NC.in", "NC.out", "NC.mid"],
+  felder: ["NC.feld", "NC.warp", "NC.core"],
+
+  start(){
+    return {
+      stationen: this.stationen,
+      laeufer: this.laeufer,
+      felder: this.felder,
+      pipeline: "Pipelineblitz‑RUN‑3",
+      status: "OK",
+      stamp: Date.now()
+    };
+  }
+};
+
+// ======================================================
+// Starten
+// ======================================================
+
+document.getElementById("run3").innerText =
+  JSON.stringify(RUN3.start(), null, 2);
+
 </script>
 
 </body>
