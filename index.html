@@ -35,7 +35,7 @@
 
 <h1>EVOCITY · RUN‑3 · Pipelineblitz · EXE</h1>
 
-<div id="run3" class="console">RUN‑3 wird geladen…</div>
+<div id="run3" class="console">Bereit für RUN‑3…</div>
 
 <button class="btn" onclick="run3exe()">RUN‑3 starten</button>
 
@@ -47,10 +47,9 @@
 
 const RUN3 = {
 
-  // sichtbare Ergebnis-Ebenen
-  stationen: ["XyX", "AIR", "AIV"],        // 3‑Stationen‑Impuls
-  laeufer:   ["NC.in", "NC.out", "NC.mid"], // NC‑Kette (intern, aber sichtbar als Ergebnis)
-  felder:    ["NC.feld", "NC.warp", "NC.core"], // Orbit‑Ergebnis
+  stationen: ["XyX", "AIR", "AIV"],
+  laeufer:   ["NC.in", "NC.out", "NC.mid"],
+  felder:    ["NC.feld", "NC.warp", "NC.core"],
 
   start(){
     return {
@@ -69,14 +68,12 @@ const RUN3 = {
 // ======================================================
 
 function run3exe(){
+  const out = RUN3.start();
   document.getElementById("run3").innerText =
-    JSON.stringify(RUN3.start(), null, 2);
+    JSON.stringify(out, null, 2);
 
-  console.log("RUN‑3 EXE gestartet.");
+  console.log("RUN‑3 EXE gestartet:", out);
 }
-
-// Autoload
-run3exe();
 </script>
 
 </body>
