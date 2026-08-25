@@ -2,38 +2,62 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>RUN‑3 · Pipelineblitz · iki1uc</title>
+<title>EVOCITY · RUN‑3 · Pipelineblitz · EXE</title>
 
 <style>
-  body { background:#000; color:#0f0; font-family:Consolas; padding:20px; }
-  h1 { color:#6cf; }
-  .console { background:#111; border:1px solid #333; padding:10px; }
+  body { background:#000; color:#0f0; font-family:Consolas; padding:40px; }
+  h1 { color:#6cf; text-align:center; }
+  .console {
+    background:#111;
+    border:1px solid #333;
+    padding:20px;
+    margin-top:30px;
+    font-size:16px;
+    white-space:pre;
+  }
+  .btn {
+    margin-top:20px;
+    padding:12px 20px;
+    background:#12263a;
+    color:#9cf;
+    border:1px solid #1f2937;
+    cursor:pointer;
+    border-radius:6px;
+    display:block;
+    margin-left:auto;
+    margin-right:auto;
+  }
+  .btn:hover { background:#1a3a55; transform:scale(1.05); }
 </style>
 </head>
 
 <body>
 
-<h1>RUN‑3 · Pipelineblitz · EXE‑Start</h1>
+<h1>EVOCITY · RUN‑3 · Pipelineblitz · EXE</h1>
 
 <div id="run3" class="console">RUN‑3 wird geladen…</div>
 
+<button class="btn" onclick="run3exe()">RUN‑3 starten</button>
+
 <script>
 // ======================================================
-// RUN‑3 · Pipelineblitz · EXE‑Startpunkt
+// RUN‑3 · Pipelineblitz · EXE‑Startpunkt (industry‑6.0)
+// Nur Ergebnis. Keine 6D‑Befehle sichtbar.
 // ======================================================
 
 const RUN3 = {
 
-  stationen: ["XyX", "AIR", "AIV"],
-  laeufer: ["NC.in", "NC.out", "NC.mid"],
-  felder: ["NC.feld", "NC.warp", "NC.core"],
+  // sichtbare Ergebnis-Ebenen
+  stationen: ["XyX", "AIR", "AIV"],        // 3‑Stationen‑Impuls
+  laeufer:   ["NC.in", "NC.out", "NC.mid"], // NC‑Kette (intern, aber sichtbar als Ergebnis)
+  felder:    ["NC.feld", "NC.warp", "NC.core"], // Orbit‑Ergebnis
 
   start(){
     return {
+      pipeline: "Pipelineblitz‑RUN‑3",
       stationen: this.stationen,
       laeufer: this.laeufer,
       felder: this.felder,
-      pipeline: "Pipelineblitz‑RUN‑3",
       status: "OK",
       stamp: Date.now()
     };
@@ -41,13 +65,5 @@ const RUN3 = {
 };
 
 // ======================================================
-// Starten
-// ======================================================
-
-document.getElementById("run3").innerText =
-  JSON.stringify(RUN3.start(), null, 2);
-
-</script>
-
-</body>
-</html>
+// EXE‑Trigger
+// =================================================
