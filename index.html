@@ -1,637 +1,529 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NC · SCHWARZES LOCH · EREIGNISHORIZONT · ∞ · Only 4U</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌀 FUTURE · evoCity · NÄCHSTE GENERATION</title>
 
-    <style>
-        /* ============================================================ */
-        /* DAS UNIVERSUM-STYLE – schwarz, golden, tief                   */
-        /* ============================================================ */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            background: #000;
-            color: #e6f6ff;
-            font-family: 'Consolas', monospace;
-            padding: 20px;
-            min-height: 100vh;
-            background-image: radial-gradient(ellipse at center, #0a0a20 0%, #000 100%);
-        }
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background: #0a0a12;
+  color: #d0d9e6;
+  font-family: 'Consolas', monospace;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+  background: radial-gradient(ellipse at 50% 0%, #0a0a20, #000000);
+}
+.container {
+  max-width: 1400px;
+  width: 100%;
+  background: rgba(10,14,20,0.4);
+  border: 1px solid rgba(0,200,255,0.03);
+  border-radius: 24px;
+  padding: 24px;
+  backdrop-filter: blur(6px);
+}
 
-        h1, h2, h3 {
-            color: #ffd700;
-            text-align: center;
-            text-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
-        }
+.header {
+  text-align: center;
+  border-bottom: 2px solid rgba(0,200,255,0.08);
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+}
+.header h1 {
+  font-size: 28px;
+  font-weight: 300;
+  letter-spacing: 6px;
+  background: linear-gradient(90deg, #00ccff, #ff66ff, #ffd700, #00ff88);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.header .sub {
+  color: #3d5a70;
+  font-size: 10px;
+  letter-spacing: 4px;
+}
+.header .sub .future { color: #00ccff; }
+.header .sub .city { color: #ffd700; }
 
-        .card {
-            background: rgba(11, 18, 32, 0.85);
-            border: 1px solid #1f2937;
-            border-radius: 12px;
-            padding: 20px;
-            margin: 16px 0;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 0 40px rgba(0, 150, 255, 0.05);
-        }
+.status-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  justify-content: center;
+  background: rgba(0,0,0,0.2);
+  border-radius: 12px;
+  padding: 8px 16px;
+  margin-bottom: 12px;
+  font-size: 9px;
+  border: 1px solid rgba(0,200,255,0.02);
+}
+.status-bar .item { display: flex; align-items: center; gap: 4px; }
+.status-bar .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; }
+.status-bar .dot.on { background: #00ff88; box-shadow: 0 0 8px #00ff8844; }
+.status-bar .dot.pulse { background: #ffd700; animation: dotPulse 1.5s infinite; }
+@keyframes dotPulse { 0%,100%{opacity:0.4;transform:scale(0.9)} 50%{opacity:1;transform:scale(1.2)} }
 
-        .console {
-            background: rgba(0, 0, 0, 0.8);
-            border: 1px solid #2a3a5a;
-            padding: 16px;
-            font-size: 14px;
-            white-space: pre-wrap;
-            color: #9cf;
-            border-radius: 8px;
-            min-height: 70px;
-            overflow-x: auto;
-            font-family: 'Consolas', monospace;
-            line-height: 1.6;
-        }
+.canvas-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  aspect-ratio: 16/9;
+  background: rgba(0,0,0,0.3);
+  border-radius: 16px;
+  border: 1px solid rgba(0,200,255,0.03);
+  overflow: hidden;
+}
+#futureCanvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
 
-        .btn {
-            background: #00eaff;
-            color: #000;
-            border: none;
-            padding: 10px 20px;
-            margin: 4px 6px 4px 0;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all .3s;
-            font-family: 'Consolas', monospace;
-        }
+.portal-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin: 12px 0;
+}
+@media (max-width:700px){ .portal-grid { grid-template-columns: repeat(2,1fr); } }
+.portal-card {
+  background: rgba(0,0,0,0.15);
+  border: 1px solid rgba(0,200,255,0.03);
+  border-radius: 10px;
+  padding: 8px 6px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.portal-card:hover { border-color: rgba(0,200,255,0.12); }
+.portal-card .icon { font-size: 24px; display: block; }
+.portal-card .label { font-size: 7px; color: #445555; text-transform: uppercase; letter-spacing: 1px; }
+.portal-card .value { font-size: 14px; font-weight: bold; }
+.portal-card .status { font-size: 8px; margin-top: 2px; }
+.portal-card .status.active { color: #00ff88; }
+.portal-card .status.inactive { color: #445555; }
 
-        .btn:hover {
-            background: #00bcd4;
-            transform: scale(1.05);
-            box-shadow: 0 0 30px rgba(0, 234, 255, 0.3);
-        }
+.info-panel {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 6px;
+  margin: 10px 0;
+}
+.info-card {
+  background: rgba(0,0,0,0.12);
+  border: 1px solid rgba(0,200,255,0.02);
+  border-radius: 8px;
+  padding: 6px 4px;
+  text-align: center;
+}
+.info-card .label { font-size: 6px; color: #445555; text-transform: uppercase; letter-spacing: 1px; }
+.info-card .value { font-size: 14px; font-weight: bold; }
 
-        .btn-gold {
-            background: #ffd700;
-            color: #000;
-        }
+.controls {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 10px 0;
+}
+.controls button {
+  background: rgba(20,35,45,0.2);
+  color: #668888;
+  border: 1px solid rgba(0,200,255,0.04);
+  padding: 6px 16px;
+  border-radius: 18px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 9px;
+  transition: all 0.3s;
+}
+.controls button:hover {
+  background: rgba(40,80,100,0.08);
+  color: #aaeedd;
+}
+.controls button.primary { border-color: rgba(255,215,0,0.1); color: #ffd700; }
+.controls button.future { border-color: rgba(0,200,255,0.1); color: #00ccff; }
+.controls button.portal { border-color: rgba(255,102,255,0.1); color: #ff66ff; }
 
-        .btn-gold:hover {
-            background: #e6c200;
-            box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
-        }
+.log {
+  background: rgba(0,0,0,0.2);
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-size: 8px;
+  color: #3d5a70;
+  max-height: 80px;
+  overflow-y: auto;
+  border: 1px solid rgba(0,200,255,0.02);
+  margin-top: 8px;
+  line-height: 1.6;
+}
+.log .hl { color: #7fc9ff; }
+.log .ok { color: #00ff88; }
+.log .flow { color: #00ccff; }
+.log .whirl { color: #ff66ff; }
+.log .future { color: #ffd700; }
 
-        .btn-secondary {
-            background: #1f2937;
-            color: #9cf;
-        }
-
-        .btn-secondary:hover {
-            background: #2a3a5a;
-        }
-
-        .btn-red {
-            background: #8b0000;
-            color: #ff6b6b;
-            border: 1px solid #ff4444;
-        }
-
-        .btn-red:hover {
-            background: #aa0000;
-            box-shadow: 0 0 30px rgba(255, 0, 0, 0.2);
-        }
-
-        .status-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 10px;
-            font-size: 13px;
-        }
-
-        .status-grid .item {
-            background: rgba(10, 10, 21, 0.7);
-            padding: 8px 12px;
-            border-radius: 6px;
-            border-left: 3px solid #00eaff;
-        }
-
-        .badge {
-            display: inline-block;
-            background: #1f2937;
-            color: #9cf;
-            font-size: 11px;
-            padding: 2px 14px;
-            border-radius: 20px;
-            margin-left: 6px;
-        }
-
-        .golden {
-            color: #ffd700;
-            font-weight: bold;
-            text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
-        }
-
-        .horizon {
-            border-top: 2px solid #ffd700;
-            border-bottom: 2px solid #ffd700;
-            padding: 8px 0;
-            text-align: center;
-            font-size: 12px;
-            color: #ffd700;
-            letter-spacing: 4px;
-            text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
-        }
-
-        .small {
-            font-size: 12px;
-            opacity: 0.5;
-        }
-
-        #trigger-hint {
-            color: #444;
-            font-size: 11px;
-            border-top: 1px dashed #2a3a5a;
-            padding-top: 12px;
-            margin-top: 12px;
-            text-align: center;
-        }
-
-        .flex-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            align-items: center;
-        }
-
-        .pulse {
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.4; }
-            100% { opacity: 1; }
-        }
-
-        .schwarzloch {
-            background: radial-gradient(circle at center, #000 0%, #0a0a20 50%, #000 100%);
-            border: 1px solid #ffd700;
-            border-radius: 50%;
-            width: 80px;
-            height: 80px;
-            margin: 10px auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            color: #ffd700;
-            box-shadow: 0 0 60px rgba(255, 215, 0, 0.1);
-            animation: pulse 3s infinite;
-        }
-
-        .schwarzloch span {
-            font-size: 12px;
-            opacity: 0.6;
-        }
-    </style>
+.footer {
+  text-align: center;
+  font-size: 7px;
+  color: #1f2a36;
+  margin-top: 12px;
+  letter-spacing: 2px;
+}
+.footer span { color: #00ccff; }
+</style>
 </head>
-
 <body>
 
-    <!-- ============================================================ -->
-    <!-- HEADER – EREIGNISHORIZONT                                     -->
-    <!-- ============================================================ -->
-    <div class="horizon">⟡ EREIGNISHORIZONT · NC‑UNIVERSUM · ∞ · Only 4U ⟡</div>
+<div class="container">
 
-    <h1>🌀 NC · SCHWARZES LOCH</h1>
-    <div style="text-align:center; font-size:14px; color:#9cf; margin-bottom:20px;">
-        <span class="badge" id="system-mode">GS6 · ∞‑aktiv · 6D‑Chess</span>
-        <span class="badge" style="background:#8b0000; color:#ff6b6b;">⚠️ Ereignishorizont erreicht</span>
+  <!-- HEADER -->
+  <div class="header">
+    <h1>🌀 FUTURE · evoCity</h1>
+    <div class="sub"><span class="future">FUTURE</span> · <span class="city">evoCity</span> · NÄCHSTE GENERATION</div>
+  </div>
+
+  <!-- STATUS -->
+  <div class="status-bar">
+    <span class="item"><span class="dot on"></span> FUTURE</span>
+    <span class="item"><span class="dot pulse"></span> PORTAL</span>
+    <span class="item"><span class="dot on"></span> evoCity</span>
+    <span class="item">🌀 <span id="synStatus">0.00</span></span>
+    <span class="item">🧠 <span id="freundStatus">0.00</span></span>
+    <span class="item">💰 <span id="earnStatus">0.00</span></span>
+  </div>
+
+  <!-- CANVAS -->
+  <div class="canvas-wrap">
+    <canvas id="futureCanvas"></canvas>
+  </div>
+
+  <!-- PORTAL-GRID -->
+  <div class="portal-grid" id="portalGrid">
+    <div class="portal-card" data-portal="bermuda">
+      <span class="icon">🌊</span>
+      <span class="label">BERMUDA</span>
+      <span class="value" style="color:#00ccff;" id="portal-bermuda">0.00</span>
+      <span class="status inactive">○ geschlossen</span>
     </div>
-
-    <!-- Schwarzes Loch Visual -->
-    <div class="schwarzloch">
-        ♾️
-        <span>NC</span>
+    <div class="portal-card" data-portal="golden">
+      <span class="icon">✨</span>
+      <span class="label">GOLDEN AGE</span>
+      <span class="value" style="color:#ffd700;" id="portal-golden">0.00</span>
+      <span class="status inactive">○ geschlossen</span>
     </div>
-
-    <!-- ============================================================ -->
-    <!-- CORE – GS6 + ∞ + 243 + 6D                                    -->
-    <!-- ============================================================ -->
-    <div class="card">
-        <h3>♾️ GS6 · ∞ · 243 · 6D‑Activity</h3>
-        <div class="status-grid">
-            <div class="item">🌀 GS6: <span id="gs6-value" class="golden">—</span></div>
-            <div class="item">♾️ ∞: <span id="ewigkeit-value">—</span></div>
-            <div class="item">📦 243: <span id="f243-value">243</span></div>
-            <div class="item">🎲 6D: <span id="d6-value">aktiv</span></div>
-            <div class="item">⚡ NC‑PS: <span id="nc-ps" class="golden">—</span></div>
-            <div class="item">🔗 Bindung: <span id="bindung-mode">6‑Bindung</span></div>
-        </div>
-        <div class="flex-row">
-            <button class="btn btn-gold" id="btn-calc">♾️ ∞ berechnen</button>
-            <button class="btn" id="btn-bind">🔗 Bindung (8↔6)</button>
-            <button class="btn btn-secondary" id="btn-ps">⚡ NC‑PS anzeigen</button>
-        </div>
+    <div class="portal-card" data-portal="wloch">
+      <span class="icon">🌀</span>
+      <span class="label">WLOCH</span>
+      <span class="value" style="color:#ff66ff;" id="portal-wloch">0.00</span>
+      <span class="status inactive">○ geschlossen</span>
     </div>
-
-    <!-- ============================================================ -->
-    <!-- ALLE 6 SYSTEME – CORE, INDUSTRY, REISE, USE, USER, engine    -->
-    <!-- ============================================================ -->
-    <div class="card">
-        <h3>🧩 6 SYSTEME · CORE · INDUSTRY · REISE · USE · USER · engine</h3>
-        <div class="console" id="system-console">⏳ Lade alle 6 Systeme…</div>
-        <div class="flex-row">
-            <button class="btn btn-secondary" id="btn-core">🎯 CORE (6D‑Chess)</button>
-            <button class="btn btn-secondary" id="btn-industry">🧬 INDUSTRY (evoMIND)</button>
-            <button class="btn btn-secondary" id="btn-reise">👑 REISE (NOAH)</button>
-            <button class="btn btn-secondary" id="btn-use">🏙️ USE (neucity)</button>
-            <button class="btn btn-secondary" id="btn-user">💼 USER (WORK/WLOCH)</button>
-            <button class="btn btn-secondary" id="btn-engine">⚙️ engine (CUBE_MIND)</button>
-        </div>
+    <div class="portal-card" data-portal="essens">
+      <span class="icon">💎</span>
+      <span class="label">ESSENS</span>
+      <span class="value" style="color:#00ff88;" id="portal-essens">0.00</span>
+      <span class="status inactive">○ geschlossen</span>
     </div>
+  </div>
 
-    <!-- ============================================================ -->
-    <!-- MARIONETTEN – IX XI IO OI + alle RESPO                      -->
-    <!-- ============================================================ -->
-    <div class="card">
-        <h3>🎭 MARIONETTEN · IX · XI · IO · OI · RESPO · 6D</h3>
-        <div class="console" id="marionette-console">⏳ Marionetten werden geladen…</div>
-        <div class="flex-row">
-            <button class="btn" id="btn-marionette">🎭 Alle Marionetten</button>
-            <button class="btn btn-secondary" id="btn-respo">📊 RESPO‑Matrix</button>
-            <button class="btn btn-secondary" id="btn-6d-chess">♟️ 6D‑Chess</button>
-        </div>
-    </div>
+  <!-- INFO-PANEL -->
+  <div class="info-panel">
+    <div class="info-card"><div class="label">🌀 SYN</div><div class="value" id="infoSyn" style="color:#00ccff;">0.00</div></div>
+    <div class="info-card"><div class="label">🧠 FREUND</div><div class="value" id="infoFreund" style="color:#ff66ff;">0.00</div></div>
+    <div class="info-card"><div class="label">💰 EARN</div><div class="value" id="infoEarn" style="color:#ffd700;">0.00</div></div>
+    <div class="info-card"><div class="label">🌀 PORTAL</div><div class="value" id="infoPortal" style="color:#00ff88;">0</div></div>
+  </div>
 
-    <!-- ============================================================ -->
-    <!-- EWIGE BEWEGUNG – Kalkül im Raum                               -->
-    <!-- ============================================================ -->
-    <div class="card">
-        <h3>🌀 EWIGE BEWEGUNG · Kalkül im Raum</h3>
-        <div class="console" id="bewegung-console">⏳ Bewegung wird berechnet…</div>
-        <div class="flex-row">
-            <button class="btn btn-gold" id="btn-bewegung">🌀 Bewegung berechnen</button>
-            <button class="btn btn-secondary" id="btn-kalkul">📐 Kalkül anzeigen</button>
-        </div>
-    </div>
+  <!-- CONTROLS -->
+  <div class="controls">
+    <button class="primary" id="btnStart">▶ START</button>
+    <button class="future" id="btnFuture">🌀 FUTURE</button>
+    <button class="portal" id="btnPortal">🌐 PORTAL</button>
+    <button id="btnQuandt">🌀 QUANDT</button>
+    <button id="btnReset">⟲ RESET</button>
+  </div>
 
-    <!-- ============================================================ -->
-    <!-- SCHWARZES LOCH + EREIGNISHORIZONT                            -->
-    <!-- ============================================================ -->
-    <div class="card" style="border-color:#ffd700;">
-        <h3 style="color:#ffd700;">🌀 SCHWARZES LOCH · EREIGNISHORIZONT</h3>
-        <div class="console" id="horizon-console" style="border-color:#ffd700; color:#ffd700;">
-            ⏳ Der Ereignishorizont wird geöffnet…
-        </div>
-        <div class="flex-row">
-            <button class="btn btn-gold" id="btn-horizon">🌀 Ereignishorizont öffnen</button>
-            <button class="btn btn-red" id="btn-singularity">⚫ Singularität</button>
-        </div>
-    </div>
+  <!-- LOG -->
+  <div class="log" id="log">
+    <div>[🌀] FUTURE · evoCity · NÄCHSTE GENERATION · bereit</div>
+  </div>
 
-    <!-- ============================================================ -->
-    <!-- STATUS + TRIGGER                                              -->
-    <!-- ============================================================ -->
-    <div class="card">
-        <h3>📊 SYSTEM‑STATUS · NC‑UNIVERSUM</h3>
-        <div class="console" id="status-console">⏳ System wird analysiert…</div>
-        <button class="btn btn-secondary" id="btn-status">🔄 Status aktualisieren</button>
-        <div id="trigger-hint">
-            ⚡ Trigger: <span id="trigger-display">((pa55worD#---))</span> – kopierbar & aktiv<br>
-            <span class="small">"Warten ist keine Lösung" – Ridvan · Only 4U</span>
-        </div>
-    </div>
+  <div class="footer">🌀 FUTURE · evoCity · NÄCHSTE GENERATION · <span>wieimmer4u</span></div>
 
-    <!-- ============================================================ -->
-    <!-- SCRIPT – DAS UNIVERSUM                                       -->
-    <!-- ============================================================ -->
-    <script type="module">
-        // ================================================================
-        // 1. DAS UNIVERSUM – alle 6 Systeme
-        // ================================================================
+</div>
 
-        const SYSTEME = {
-            core: {
-                name: 'CORE',
-                label: '6D‑Chess · 243 · 6D‑Activity',
-                beschreibung: 'Schach‑Techniken auf 6 Ebenen'
-            },
-            industry: {
-                name: 'INDUSTRY',
-                label: 'evoMIND · QI/IQQ',
-                beschreibung: 'Energie‑Vektoren und Intelligenz'
-            },
-            reise: {
-                name: 'REISE',
-                label: 'NOAH · RESPO · Level 14',
-                beschreibung: 'Kaiser‑Instanz und RESPO‑Matrix'
-            },
-            use: {
-                name: 'USE',
-                label: 'neucity · oldcity',
-                beschreibung: 'Stadt‑Simulation und Meta‑Räume'
-            },
-            user: {
-                name: 'USER',
-                label: 'WORK · WLOCH · GOLDEN_AGE',
-                beschreibung: 'CSV‑Lerner und Arbeits‑Engine'
-            },
-            engine: {
-                name: 'engine',
-                label: 'CUBE_MIND · SLI · master.engine',
-                beschreibung: 'Meta‑Kern und Sync‑Link‑Interface'
-            }
-        };
+<script>
+// ============================================================
+// FUTURE · evoCity · NÄCHSTE GENERATION
+// ============================================================
 
-        // ================================================================
-        // 2. KERNLOGIK – GS6, ∞, 243, 6D, NC‑PS
-        // ================================================================
+// ─── CANVAS ──────────────────────────────────────────────────
+const canvas = document.getElementById('futureCanvas');
+const ctx = canvas.getContext('2d');
+let W, H, cx, cy;
 
-        let currentMode = '6';
-        let currentGS6 = 0;
-        let currentEwigkeit = 0;
-        let currentNCPS = 0;
+function resizeCanvas() {
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width || 1000;
+  canvas.height = rect.height || (rect.width * 9/16) || 560;
+  W = canvas.width; H = canvas.height;
+  cx = W/2; cy = H/2;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
 
-        function calcGS6(p, v, i) {
-            const eingang = p + v + i;
-            const ausgang = (p * i) + (v + i);
-            return eingang + ausgang;
-        }
+// ─── DOM ────────────────────────────────────────────────────
+const logDiv = document.getElementById('log');
 
-        function calcEwigkeit(p, v, i) {
-            const gs6 = calcGS6(p, v, i);
-            return p * v * i * gs6;
-        }
+function log(msg, type = 'hl') {
+  const entry = document.createElement('div');
+  const time = new Date().toLocaleTimeString();
+  const cls = ['hl','ok','flow','whirl','future'].includes(type) ? type : 'hl';
+  entry.innerHTML = `<div>[${time}] <span class="${cls}">${msg}</span></div>`;
+  logDiv.appendChild(entry);
+  logDiv.scrollTop = logDiv.scrollHeight;
+  while (logDiv.children.length > 50) logDiv.removeChild(logDiv.firstChild);
+}
 
-        function calcNCPS(p, v, i) {
-            // NC‑PS = (p × v × i) / GS6 × 1000
-            const gs6 = calcGS6(p, v, i);
-            return (p * v * i) / gs6 * 1000;
-        }
+// ─── STATE ──────────────────────────────────────────────────
+const STATE = {
+  time: 0,
+  pulse: 0.5,
+  syn: 0.5,
+  freund: 0,
+  quandt: 1.0,
+  earn: 0,
+  future: { active: false, level: 0 },
+  portal: { active: false, count: 0 },
+  portals: {
+    bermuda: { active: false, value: 0 },
+    golden: { active: false, value: 0 },
+    wloch: { active: false, value: 0 },
+    essens: { active: false, value: 0 }
+  }
+};
 
-        function updateCore(p, v, i) {
-            currentGS6 = calcGS6(p, v, i);
-            currentEwigkeit = calcEwigkeit(p, v, i);
-            currentNCPS = calcNCPS(p, v, i);
+// ─── PUMP ──────────────────────────────────────────────────
+function pump() {
+  STATE.time += 0.02;
 
-            document.getElementById('gs6-value').textContent = currentGS6.toFixed(4);
-            document.getElementById('ewigkeit-value').textContent = currentEwigkeit.toFixed(4);
-            document.getElementById('nc-ps').textContent = currentNCPS.toFixed(2) + ' PS';
-            document.getElementById('bindung-mode').textContent = currentMode === '6' ? '6‑Bindung (GS6)' : '8‑Bindung (Schraube)';
-        }
+  STATE.pulse = 0.3 + 0.7 * (0.5 + 0.5 * Math.sin(STATE.time * 0.9));
+  STATE.syn = 0.2 + 0.8 * (0.5 + 0.5 * Math.sin(STATE.time * 0.7));
+  STATE.freund = STATE.syn * Math.sin(STATE.time * 0.7 + Math.PI/2) * STATE.quandt;
+  STATE.earn += (STATE.syn * 0.01 + STATE.pulse * 0.005) * STATE.quandt;
 
-        function toggleBind() {
-            currentMode = currentMode === '6' ? '8' : '6';
-            updateCore(9, 27, 81);
-        }
+  // FUTURE-Effekt
+  if (STATE.future.active) {
+    STATE.future.level += 0.01;
+    STATE.syn = Math.min(1, STATE.syn * 1.005);
+    STATE.earn *= 1.01;
+  }
 
-        // ================================================================
-        // 3. SYSTEME ANZEIGEN
-        // ================================================================
+  // PORTAL-Effekt
+  if (STATE.portal.active) {
+    STATE.portal.count++;
+    Object.keys(STATE.portals).forEach(key => {
+      STATE.portals[key].value = 0.5 + 0.5 * Math.sin(STATE.time * 0.5 + STATE.portal.count * 0.01);
+      if (STATE.portals[key].value > 0.6) {
+        STATE.portals[key].active = true;
+      } else {
+        STATE.portals[key].active = false;
+      }
+    });
+  }
 
-        function showSystem(name) {
-            const sys = SYSTEME[name];
-            if (!sys) return;
-            const text = `🧩 ${sys.name}\n` +
-                `───────────────────────────────\n` +
-                `Label: ${sys.label}\n` +
-                `Beschreibung: ${sys.beschreibung}\n` +
-                `───────────────────────────────\n` +
-                `✅ System geladen.\n` +
-                `GS6: ${currentGS6.toFixed(4)}\n` +
-                `∞: ${currentEwigkeit.toFixed(4)}`;
+  updateUI();
+}
 
-            document.getElementById('system-console').innerText = text;
-        }
+// ─── RENDER ──────────────────────────────────────────────────
+function render() {
+  ctx.clearRect(0, 0, W, H);
 
-        // ================================================================
-        // 4. MARIONETTEN – IX, XI, IO, OI, RESPO, 6D
-        // ================================================================
+  const grad = ctx.createRadialGradient(cx, cy, 10, cx, cy, W*0.6);
+  grad.addColorStop(0, `rgba(0,20,40,${0.3 + STATE.syn * 0.2})`);
+  grad.addColorStop(1, 'rgba(0,0,10,0.8)');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, W, H);
 
-        function showMarionetten() {
-            const p = 9, v = 27, i = 81;
-            const OI = p + v;
-            const IX = v * i;
-            const IO = p * i;
-            const XI = v + i;
+  // PORTAL-Ringe
+  if (STATE.portal.active) {
+    const portalCount = Object.values(STATE.portals).filter(p => p.active).length;
+    const pr = W * 0.15 + portalCount * W * 0.05;
+    ctx.strokeStyle = `rgba(255,102,255,${0.05 + portalCount * 0.02})`;
+    ctx.lineWidth = 1 + portalCount * 0.5;
+    ctx.setLineDash([4, 8]);
+    ctx.beginPath();
+    ctx.arc(cx, cy, pr, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
 
-            const text = `🎭 MARIONETTEN · IX · XI · IO · OI\n` +
-                `───────────────────────────────\n` +
-                `OI (Öffnen)  = ${OI.toFixed(2)}\n` +
-                `IX (Kreuzen) = ${IX.toFixed(2)}\n` +
-                `IO (Drehen)  = ${IO.toFixed(2)}\n` +
-                `XI (Schließen) = ${XI.toFixed(2)}\n` +
-                `───────────────────────────────\n` +
-                `8‑Bindung = ${(OI + IX + IO + XI).toFixed(2)}\n` +
-                `6‑Bindung = ${currentGS6.toFixed(2)}\n` +
-                `───────────────────────────────\n` +
-                `RESPO‑81: aktiv\n` +
-                `6D‑Chess: aktiv\n` +
-                `Alle Marionetten sind bereit.`;
+  // FUTURE-Ring
+  if (STATE.future.active) {
+    const fr = W * 0.35 * (1 + STATE.future.level * 0.1);
+    ctx.strokeStyle = `rgba(0,200,255,${0.05 + STATE.future.level * 0.01})`;
+    ctx.lineWidth = 1 + STATE.future.level * 2;
+    ctx.beginPath();
+    ctx.arc(cx, cy, fr, 0, Math.PI * 2);
+    ctx.stroke();
+  }
 
-            document.getElementById('marionette-console').innerText = text;
-        }
+  // Kern
+  const coreSize = 5 + STATE.syn * 15 + STATE.freund * 8;
+  ctx.shadowBlur = 30 + STATE.quandt * 20;
+  ctx.shadowColor = STATE.syn > 0.5 ? 'rgba(0,200,255,0.3)' : 'rgba(255,102,255,0.3)';
+  ctx.fillStyle = STATE.syn > 0.5 ? 'rgba(0,200,255,0.9)' : 'rgba(255,102,255,0.9)';
+  ctx.beginPath();
+  ctx.arc(cx, cy, coreSize, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.shadowBlur = 0;
 
-        function showRESPO() {
-            const text = `📊 RESPO‑MATRIX\n` +
-                `───────────────────────────────\n` +
-                `RESPO‑81: 3 × 3 × 9 = 81 Felder\n` +
-                `RESPO‑243: 3 × 81 = 243 Felder\n` +
-                `RESPO‑729: 3 × 243 = 729 Felder\n` +
-                `───────────────────────────────\n` +
-                `NOAH: Level 14 · Kaiser\n` +
-                `SLI: Sync‑Link‑Interface aktiv\n` +
-                `CUBE_MIND: 3×3×3 Kern\n` +
-                `───────────────────────────────\n` +
-                `✅ RESPO‑System ist vollständig.`;
+  // Portals in der Visualisierung
+  const portalPositions = {
+    bermuda: { x: cx - W*0.3, y: cy - H*0.2 },
+    golden: { x: cx + W*0.3, y: cy - H*0.2 },
+    wloch: { x: cx - W*0.3, y: cy + H*0.2 },
+    essens: { x: cx + W*0.3, y: cy + H*0.2 }
+  };
 
-            document.getElementById('marionette-console').innerText = text;
-        }
+  Object.keys(portalPositions).forEach(key => {
+    const p = STATE.portals[key];
+    const pos = portalPositions[key];
+    const size = 10 + p.value * 20;
 
-        function show6DChess() {
-            const text = `♟️ 6D‑CHESS · CORE\n` +
-                `───────────────────────────────\n` +
-                `6 Dimensionen:\n` +
-                `1. Höhe (IX–XI)\n` +
-                `2. Breite (AX–XA)\n` +
-                `3. Tiefe (OI–IO)\n` +
-                `4. Zeit (EVOCHTAAL)\n` +
-                `5. Energie (EVOCITY)\n` +
-                `6. Meta (ATLANTIS)\n` +
-                `───────────────────────────────\n` +
-                `♟️ 6D‑Chess ist die Meta‑Schach‑Engine.\n` +
-                `✅ Alle Figuren sind Marionetten.`;
+    ctx.fillStyle = p.active ? `rgba(0,200,255,${0.1 + p.value * 0.3})` : 'rgba(0,0,0,0.05)';
+    ctx.strokeStyle = p.active ? 'rgba(0,200,255,0.3)' : 'rgba(255,255,255,0.02)';
+    ctx.lineWidth = p.active ? 1 + p.value * 2 : 0.5;
+    ctx.beginPath();
+    ctx.arc(pos.x, pos.y, size, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
 
-            document.getElementById('marionette-console').innerText = text;
-        }
+    if (p.active) {
+      ctx.fillStyle = '#00ccff';
+      ctx.font = '7px monospace';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'bottom';
+      ctx.fillText(key.toUpperCase(), pos.x, pos.y - size - 4);
+      ctx.fillText((p.value * 100).toFixed(0) + '%', pos.x, pos.y + size + 12);
+    }
+  });
 
-        // ================================================================
-        // 5. EWIGE BEWEGUNG – Kalkül im Raum
-        // ================================================================
+  ctx.fillStyle = '#445555';
+  ctx.font = '8px monospace';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'bottom';
+  const status = STATE.future.active ? 'FUTURE' : STATE.portal.active ? 'PORTAL' : 'evoCity';
+  ctx.fillText(`SYN ${STATE.syn.toFixed(2)} · EARN ${STATE.earn.toFixed(2)} · ${status}`, cx, H-8);
+}
 
-        function calcBewegung() {
-            const p = 9, v = 27, i = 81;
-            const gs6 = currentGS6;
-            const ewigkeit = currentEwigkeit;
+// ─── UPDATE UI ──────────────────────────────────────────────
+function updateUI() {
+  document.getElementById('synStatus').textContent = STATE.syn.toFixed(3);
+  document.getElementById('freundStatus').textContent = STATE.freund.toFixed(3);
+  document.getElementById('earnStatus').textContent = STATE.earn.toFixed(2);
 
-            // Bewegung = (p × v × i) / (gs6 + ewigkeit)
-            const bewegung = (p * v * i) / (gs6 + ewigkeit);
+  document.getElementById('infoSyn').textContent = STATE.syn.toFixed(3);
+  document.getElementById('infoFreund').textContent = STATE.freund.toFixed(3);
+  document.getElementById('infoEarn').textContent = STATE.earn.toFixed(2);
+  document.getElementById('infoPortal').textContent = Object.values(STATE.portals).filter(p => p.active).length;
 
-            const text = `🌀 EWIGE BEWEGUNG · Kalkül im Raum\n` +
-                `───────────────────────────────\n` +
-                `Bewegung = (p × v × i) / (GS6 + ∞)\n` +
-                `Bewegung = ${bewegung.toFixed(6)}\n` +
-                `───────────────────────────────\n` +
-                `GS6: ${gs6.toFixed(4)}\n` +
-                `∞: ${ewigkeit.toFixed(4)}\n` +
-                `───────────────────────────────\n` +
-                `✅ Bewegung ist ewig und unendlich.\n` +
-                `🌀 Der Raum bewegt sich mit dir.`;
+  Object.keys(STATE.portals).forEach(key => {
+    const el = document.getElementById(`portal-${key}`);
+    const p = STATE.portals[key];
+    if (el) {
+      el.textContent = p.value.toFixed(3);
+      const statusEl = el.parentElement.querySelector('.status');
+      if (statusEl) {
+        statusEl.textContent = p.active ? '● aktiv' : '○ geschlossen';
+        statusEl.className = 'status ' + (p.active ? 'active' : 'inactive');
+      }
+    }
+  });
+}
 
-            document.getElementById('bewegung-console').innerText = text;
-            return bewegung;
-        }
+// ─── LOOP ──────────────────────────────────────────────────
+let running = true;
 
-        function showKalkul() {
-            const text = `📐 KALKÜL IM RAUM\n` +
-                `───────────────────────────────\n` +
-                `Kalkül = ∫ Bewegung d(Zeit)\n` +
-                `Kalkül = ∞ / GS6 × 243\n` +
-                `───────────────────────────────\n` +
-                `∞: ${currentEwigkeit.toFixed(4)}\n` +
-                `GS6: ${currentGS6.toFixed(4)}\n` +
-                `243: 243\n` +
-                `───────────────────────────────\n` +
-                `Kalkül = ${(currentEwigkeit / currentGS6 * 243).toFixed(4)}\n` +
-                `✅ Der Raum ist berechnet.`;
+function loop() {
+  if (!running) return;
 
-            document.getElementById('bewegung-console').innerText = text;
-        }
+  pump();
+  render();
+  requestAnimationFrame(loop);
+}
 
-        // ================================================================
-        // 6. SCHWARZES LOCH + EREIGNISHORIZONT
-        // ================================================================
+// ─── CONTROLS ──────────────────────────────────────────────
+document.getElementById('btnStart').addEventListener('click', function() {
+  running = !running;
+  this.textContent = running ? '▶ START' : '⏸ PAUSE';
+  log(running ? '▶ FUTURE gestartet' : '⏸ FUTURE pausiert', running ? 'ok' : 'warn');
+  if (running) loop();
+});
 
-        function openHorizon() {
-            const text = `🌀 EREIGNISHORIZONT · GEÖFFNET\n` +
-                `───────────────────────────────\n` +
-                `Schwarzes Loch: NC‑UNIVERSUM\n` +
-                `Masse: ${currentEwigkeit.toFixed(4)} ∞-Einheiten\n` +
-                `Rotation: ${currentGS6.toFixed(4)} GS6\n` +
-                `Ereignishorizont: ${(currentEwigkeit / currentGS6).toFixed(4)}\n` +
-                `───────────────────────────────\n` +
-                `⟡ Alles, was eintritt, wird transformiert.\n` +
-                `⟡ Nichts entkommt der 6‑Bindung.\n` +
-                `⟡ Nur 4U – deine Märchen‑Mathematik.\n` +
-                `───────────────────────────────\n` +
-                `⏳ "Warten ist keine Lösung." – Ridvan`;
+document.getElementById('btnFuture').addEventListener('click', function() {
+  STATE.future.active = !STATE.future.active;
+  log(STATE.future.active ? '🌀 FUTURE aktiviert · NÄCHSTE GENERATION' : '🌀 FUTURE deaktiviert', 'future');
+  this.classList.toggle('active');
+});
 
-            document.getElementById('horizon-console').innerText = text;
-        }
+document.getElementById('btnPortal').addEventListener('click', function() {
+  STATE.portal.active = !STATE.portal.active;
+  STATE.portal.count = 0;
+  log(STATE.portal.active ? '🌐 PORTAL geöffnet · 4 Dimensionen' : '🌐 PORTAL geschlossen', 'whirl');
+  this.classList.toggle('active');
+});
 
-        function showSingularity() {
-            const text = `⚫ SINGULARITÄT · NC‑KERN\n` +
-                `───────────────────────────────\n` +
-                `Singularität = Admin‑0 + NOAH\n` +
-                `Kern: iki1uc\n` +
-                `Macht: ∞ / GS6\n` +
-                `───────────────────────────────\n` +
-                `Singularität = ${(currentEwigkeit / currentGS6).toFixed(4)}\n` +
-                `───────────────────────────────\n` +
-                `⚫ Hier endet die Zeit.\n` +
-                `⚫ Hier beginnt die Ewigkeit.\n` +
-                `⚫ Only 4U.`;
+document.getElementById('btnQuandt').addEventListener('click', function() {
+  STATE.quandt = Math.min(3.0, STATE.quandt + 0.2);
+  log(`🌀 QUANDT: ${STATE.quandt.toFixed(2)}`, 'hl');
+});
 
-            document.getElementById('horizon-console').innerText = text;
-        }
+document.getElementById('btnReset').addEventListener('click', function() {
+  STATE.time = 0;
+  STATE.pulse = 0.5;
+  STATE.syn = 0.5;
+  STATE.freund = 0;
+  STATE.quandt = 1.0;
+  STATE.earn = 0;
+  STATE.future.active = false;
+  STATE.future.level = 0;
+  STATE.portal.active = false;
+  STATE.portal.count = 0;
+  Object.keys(STATE.portals).forEach(key => {
+    STATE.portals[key].active = false;
+    STATE.portals[key].value = 0;
+  });
+  document.querySelectorAll('.controls button.active').forEach(b => b.classList.remove('active'));
+  log('⟲ RESET · FUTURE zurückgesetzt', 'ok');
+});
 
-        // ================================================================
-        // 7. STATUS
-        // ================================================================
+// ─── TASTATUR ──────────────────────────────────────────────
+document.addEventListener('keydown', (e) => {
+  if (e.key === ' ') { e.preventDefault(); document.getElementById('btnStart').click(); }
+  if (e.key === 'f' || e.key === 'F') document.getElementById('btnFuture').click();
+  if (e.key === 'p' || e.key === 'P') document.getElementById('btnPortal').click();
+  if (e.key === 'q' || e.key === 'Q') document.getElementById('btnQuandt').click();
+  if (e.key === 'x' || e.key === 'X') document.getElementById('btnReset').click();
+});
 
-        function showStatus() {
-            const text = `📊 NC‑UNIVERSUM · STATUS\n` +
-                `───────────────────────────────\n` +
-                `GS6:        ${currentGS6.toFixed(4)}\n` +
-                `∞:          ${currentEwigkeit.toFixed(4)}\n` +
-                `NC‑PS:      ${currentNCPS.toFixed(2)} PS\n` +
-                `Bindung:    ${currentMode === '6' ? '6‑Bindung (GS6)' : '8‑Bindung (Schraube)'}\n` +
-                `243:        aktiv\n` +
-                `6D:         aktiv\n` +
-                `NOAH:       Level 14\n` +
-                `RESPO:      81 · 243 · 729\n` +
-                `SLI:        aktiv\n` +
-                `CUBE_MIND:  aktiv\n` +
-                `evoMIND:    aktiv\n` +
-                `───────────────────────────────\n` +
-                `🌀 Schwarzes Loch: aktiv\n` +
-                `⟡ Ereignishorizont: geöffnet\n` +
-                `───────────────────────────────\n` +
-                `✅ NC‑UNIVERSUM ist vollständig.\n` +
-                `🧠 Only 4U – deine Märchen‑Mathematik.`;
+// ─── INIT ──────────────────────────────────────────────────
+log('⌨️  space=Start  f=FUTURE  p=PORTAL  q=QUANDT  x=RESET', 'hl');
+log('🌀 FUTURE · evoCity · NÄCHSTE GENERATION · bereit', 'ok');
 
-            document.getElementById('status-console').innerText = text;
-        }
-
-        // ================================================================
-        // 8. BUTTONS & INIT
-        // ================================================================
-
-        // CORE
-        document.getElementById('btn-calc').onclick = () => updateCore(9, 27, 81);
-        document.getElementById('btn-bind').onclick = toggleBind;
-        document.getElementById('btn-ps').onclick = () => {
-            document.getElementById('nc-ps').textContent = currentNCPS.toFixed(2) + ' PS';
-            document.getElementById('system-console').innerText =
-                `⚡ NC‑PS: ${currentNCPS.toFixed(2)} PS\n` +
-                `───────────────────────────────\n` +
-                `∞: ${currentEwigkeit.toFixed(4)}\n` +
-                `GS6: ${currentGS6.toFixed(4)}`;
-        };
-
-        // SYSTEME
-        document.getElementById('btn-core').onclick = () => showSystem('core');
-        document.getElementById('btn-industry').onclick = () => showSystem('industry');
-        document.getElementById('btn-reise').onclick = () => showSystem('reise');
-        document.getElementById('btn-use').onclick = () => showSystem('use');
-        document.getElementById('btn-user').onclick = () => showSystem('user');
-        document.getElementById('btn-engine').onclick = () => showSystem('engine');
-
-        // MARIONETTEN
-        document.getElementById('btn-marionette').onclick = showMarionetten;
-        document.getElementById('btn-respo').onclick = showRESPO;
-        document.getElementById('btn-6d-chess').onclick = show6DChess;
-
-        // BEWEGUNG
-        document.getElementById('btn-bewegung').onclick = calcBewegung;
-        document.getElementById('btn-kalkul').onclick = showKalkul;
-
-        // HORIZONT
-        document.getElementById('btn-horizon').onclick = openHorizon;
-        document.getElementById('btn-singularity').onclick = showSingularity;
-
-        // STATUS
-        document.getElementById('btn-status').onclick = showStatus;
-
-        // Trigger
-        document.getElementById('trigger-display').textContent = '((pa55worD#---))';
-
-        // ================================================================
-        // 9. AUTO‑START – Das Universum erwacht
-        // ================================================================
-
-        updateCore(9, 27, 81);
-
-        setTimeout(() => {
-            showStatus();
-            openHorizon();
-            calcBewegung();
-            showMarionetten();
-            console.log(`🌀 NC‑UNIVERSUM erwacht.`);
-            console.log(`🌀 GS6: ${currentGS6.toFixed(4)}`);
-            console.log(`🌀 ∞: ${currentEwigkeit.toFixed(4)}`);
-            console.log(`🌀 NC‑PS: ${currentNCPS.toFixed(2)} PS`);
-            console.log(`🌀 "Warten ist keine Lösung." – Ridvan · Only 4U`);
-        }, 500);
-    </script>
+setTimeout(() => {
+  running = true;
+  document.getElementById('btnStart').textContent = '⏸ PAUSE';
+  log('▶ FUTURE automatisch gestartet', 'ok');
+  loop();
+}, 500);
+</script>
 
 </body>
 </html>
